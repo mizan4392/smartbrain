@@ -25,8 +25,10 @@ function App() {
   return (
     <div className="App">
       <Particles params={params} className='particales'/>
-      <Navigation />
-      <Logo />
+      <div className='nav_bar'>
+         <Logo />
+        <Navigation />
+      </div>
       <Rank />
       <ImageLinkForm />
     </div>

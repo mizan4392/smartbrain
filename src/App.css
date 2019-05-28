@@ -15,3 +15,7 @@
   left: 0;
   z-index: -1;
 }
+.nav_bar{
+  display: flex;
+  justify-content:space-between;
+}
