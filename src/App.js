@@ -7,6 +7,7 @@ import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import SignIn from './components/SignIn/SignIn';
 
 const Clarifai = require('clarifai');
 
@@ -37,7 +38,8 @@ class App extends React.Component {
     this.state={
       input:'',
       imageUrl:'',
-      box:{}
+      box:{},
+      route:'signin'
     }
   }
 
@@ -88,6 +90,9 @@ class App extends React.Component {
           <Logo />
           <Navigation />
         </div>
+        {
+          //<SignIn />
+        }  
         <Rank />
         <ImageLinkForm 
           onInputChange={this.onInputChange}
