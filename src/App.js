@@ -1,5 +1,6 @@
 import React from 'react';
 import Particles from 'react-particles-js';
+import { Route } from 'react-router-dom';
 
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
@@ -8,6 +9,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 
 const Clarifai = require('clarifai');
 
@@ -39,7 +41,7 @@ class App extends React.Component {
       input:'',
       imageUrl:'',
       box:{},
-      route:'signin'
+      signIn:false
     }
   }
 
@@ -48,8 +50,14 @@ class App extends React.Component {
   }
 
   displayFaceBox = (box) =>{
-    console.log(box)
     this.setState({box:box});
+  }
+
+  isSignedIn = () =>{
+    this.setState({signIn:true});
+  }
+  isRegeisteredIn = () =>{
+    this.setState({signIn:true});
   }
 
   calculateFaceLocatiion = (data) =>{
@@ -86,18 +94,39 @@ class App extends React.Component {
     return (
       <div className="App">
         <Particles params={params} className='particales'/>
-        <div className='nav_bar'>
-          <Logo />
-          <Navigation />
-        </div>
-        {
-          //<SignIn />
-        }  
-        <Rank />
-        <ImageLinkForm 
-          onInputChange={this.onInputChange}
-          onButtonSubmit={this.onButtonSubmit}/>
-        <FaceRecognition imageUrl={this.state.imageUrl} box={this.state.box}/>
+         <Route path="/" exact render={() =>(
+            <div>
+            <div className='nav_bar'>
+                <Logo />
+                {this.state.signIn === true ? <Navigation link={"Sign Out"}/> : <Navigation link={"Sign In"}/>}
+            </div>
+            <Rank />
+            <ImageLinkForm 
+              onInputChange={this.onInputChange}
+              onButtonSubmit={this.onButtonSubmit}/>
+            <FaceRecognition imageUrl={this.state.imageUrl} box={this.state.box}/>
+          </div>
+         )}/>
+        <Route path="/signIn" render = {() => (
+          <div>
+            <div className='nav_bar'>
+              <Logo />
+              <Navigation link={""}/>
+            </div>
+            <SignIn isSignedIn={this.isSignedIn}/>
+          </div>
+        )}/>
+        <Route path="/register" render = {() => (
+          <div>
+            <div className='nav_bar'>
+              <Logo />
+              <Navigation link={""}/>
+            </div>
+            <Register isSignedIn={this.isSignedIn}/>
+
+          </div>
+        )}/>
+        
       </div>
     );
   }
