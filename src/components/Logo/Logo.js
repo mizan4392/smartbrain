@@ -10,7 +10,7 @@ const Logo =()=>{
             <Link to="/">
                 <Tilt className="Tilt br2 shadow-2" options={{ max : 25 }} style={{ height: 90, width: 90 }} >
                     <div className="Tilt-inner pa3">
-                        <img src="https://img.icons8.com/metro/104/000000/brain.png" alt='brain image'></img>
+                        <img src="https://img.icons8.com/metro/104/000000/brain.png" alt=' '></img>
                     </div>
                 </Tilt>
             </Link>
