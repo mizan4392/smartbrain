@@ -1,21 +1,21 @@
-import React from "react";
-import Particles from "react-particles-js";
-import { Route, Switch } from "react-router-dom";
+import React from 'react'
+import Particles from 'react-particles-js'
+import { Route, Switch } from 'react-router-dom'
 
-import "./App.css";
-import Navigation from "./components/Navigation/Navigation";
-import Logo from "./components/Logo/Logo";
-import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-import Rank from "./components/Rank/Rank";
-import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import SignIn from "./components/SignIn/SignIn";
-import Register from "./components/Register/Register";
+import './App.css'
+import Navigation from './components/Navigation/Navigation'
+import Logo from './components/Logo/Logo'
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
+import Rank from './components/Rank/Rank'
+import FaceRecognition from './components/FaceRecognition/FaceRecognition'
+import SignIn from './components/SignIn/SignIn'
+import Register from './components/Register/Register'
 
-const Clarifai = require("clarifai");
+const Clarifai = require('clarifai')
 
 const app = new Clarifai.App({
-  apiKey: "60fcf5e9ce6a415cae154bef2758a0ae"
-});
+  apiKey: '60fcf5e9ce6a415cae154bef2758a0ae'
+})
 
 const params = {
   particles: {
@@ -27,79 +27,105 @@ const params = {
       }
     }
   }
-};
+}
 
 class App extends React.Component {
+  constructor (props) {
+    super(props)
 
-  constructor(props) {
-    super(props);
+    let token = localStorage.getItem('token')
+    let auth = 'Auth '
+    let authToken = auth.concat(token)
+
     this.state = {
-      input: "",
-      imageUrl: "",
+      input: '',
+      imageUrl: '',
       box: [],
-      signIn: false,
-      navText: "SignIn",
-      user:[]
-    };
+      navText: '',
+      user: [],
+      token: authToken
+    }
   }
 
-  componentDidMount(){
-
+  componentDidMount () {
+    if (localStorage.getItem('token')) {
+      let h = new Headers()
+      h.append('Content-type', 'application/json')
+      h.append('Authorization', this.state.token)
+      fetch('http://localhost:3001/', {
+        method: 'get',
+        headers: h
+      })
+        .then(res => {
+          return res.json()
+        })
+        .then(data => {
+          this.setState({ user: data })
+        })
+        .catch(error => console.log(error))
+    }
   }
 
   onInputChange = event => {
-    this.setState({ input: event.target.value });
-  };
+    this.setState({ input: event.target.value })
+  }
 
-  isSignedIn = () => {
-    this.setState({ signIn: true });
-  };
-  isRegeisteredIn = () => {
-    this.setState({ signIn: true });
-  };
   calculateFaceLocatiion = data => {
-    //const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById("inputImage");
-    const width = Number(image.width);
-    const height = Number(image.height);
+    const image = document.getElementById('inputImage')
+    const width = Number(image.width)
+    const height = Number(image.height)
 
-    let area  = [];
+    let area = []
     data.outputs[0].data.regions.map(usr => {
-      return area.push({leftCol: usr.region_info.bounding_box.left_col * width,
+      return area.push({
+        leftCol: usr.region_info.bounding_box.left_col * width,
         topRow: usr.region_info.bounding_box.top_row * height,
         rightCol: width - usr.region_info.bounding_box.right_col * width,
-        bottomRow: height - usr.region_info.bounding_box.bottom_row * height})
-    });
+        bottomRow: height - usr.region_info.bounding_box.bottom_row * height
+      })
+    })
 
-    this.setState({box:area})
-  };
+    this.setState({ box: area })
+
+    let h = new Headers()
+    h.append('Content-type', 'application/json')
+    h.append('Authorization', this.state.token)
+    fetch('http://localhost:3001/updateEntry', {
+      method: 'post',
+      headers: h
+    })
+      .then(res => {
+        return res.json()
+      })
+      .then(data => {
+        this.setState({ user: data })
+      })
+      .catch(error => console.log(error))
+  }
 
   onButtonSubmit = () => {
-    this.setState({ imageUrl: this.state.input });
+    this.setState({ imageUrl: this.state.input })
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response =>
-       this.calculateFaceLocatiion(response)
-      )
-      .catch(err => console.log(err));
-  };
+      .then(response => this.calculateFaceLocatiion(response))
+      .catch(err => console.log(err))
+  }
 
-  render() {
-    
+  render () {
     return (
-      <div className="App">
-        <Particles params={params} className="particales" />
-        <div className="nav_bar">
+      <div className='App'>
+        <Particles params={params} className='particales' />
+        <div className='nav_bar'>
           <Logo />
-          <Navigation link={this.state.navText} />
+          <Navigation />
         </div>
         <Switch>
           <Route
-            path="/"
+            path='/'
             exact
             render={() => (
               <div>
-                <Rank />
+                <Rank user={this.state.user} />
                 <ImageLinkForm
                   onInputChange={this.onInputChange}
                   onButtonSubmit={this.onButtonSubmit}
@@ -112,17 +138,17 @@ class App extends React.Component {
             )}
           />
           <Route
-            path="/signIn"
+            path='/signIn'
             render={() => <SignIn isSignedIn={this.isSignedIn} />}
           />
           <Route
-            path="/register"
+            path='/register'
             render={() => <Register isSignedIn={this.isSignedIn} />}
           />
         </Switch>
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App

@@ -19,7 +19,6 @@ class SignIn extends React.Component {
   };
 
   onSubmitSignIn = e => {
-
     e.preventDefault();
     fetch("http://localhost:3001/signin", {
       method: "post",
@@ -39,9 +38,12 @@ class SignIn extends React.Component {
         if (data.token) {
           localStorage.setItem('token',data.token)
           this.props.history.push('/');
+          window.location.reload()
         }
       })
       .catch(err => console.log("error", err));
+
+       
   };
 
   render() {
