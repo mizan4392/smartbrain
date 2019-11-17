@@ -86,21 +86,22 @@ class App extends React.Component {
     })
 
     this.setState({ box: area })
-
-    let h = new Headers()
-    h.append('Content-type', 'application/json')
-    h.append('Authorization', this.state.token)
-    fetch('http://localhost:3001/updateEntry', {
-      method: 'post',
-      headers: h
-    })
-      .then(res => {
-        return res.json()
+    if (localStorage.getItem('token')) {
+      let h = new Headers()
+      h.append('Content-type', 'application/json')
+      h.append('Authorization', this.state.token)
+      fetch('http://localhost:3001/updateEntry', {
+        method: 'post',
+        headers: h
       })
-      .then(data => {
-        this.setState({ user: data })
-      })
-      .catch(error => console.log(error))
+        .then(res => {
+          return res.json()
+        })
+        .then(data => {
+          this.setState({ user: data })
+        })
+        .catch(error => console.log(error))
+    }
   }
 
   onButtonSubmit = () => {

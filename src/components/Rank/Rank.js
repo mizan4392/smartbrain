@@ -5,7 +5,7 @@ const Rank = ({ user }) => {
     <div className='white f4'>{`Hey  ${user.name} your Current rank is  `}</div>
   ) : (
     <div className='white f4'>
-      Sigin to see yur Rank
+      Sigin to see your Rank
     </div>
   )
   return (
