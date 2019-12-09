@@ -96,6 +96,7 @@ class Register extends React.Component {
                   id='name'
                   value={this.state.registeName}
                   onChange={this.onNameChange}
+                  placeholder="Enter your full Name"
                 />
                 <span style={{ color: 'red' }}>{nameError}</span>
               </div>
@@ -110,6 +111,7 @@ class Register extends React.Component {
                   value={this.state.registerEmail}
                   onChange={this.onEmailChange}
                   id='email-address'
+                  placeholder="Enter your Email"
                 />
               </div>
               <span style={{ color: 'red' }}>{emailError}</span>
@@ -124,6 +126,7 @@ class Register extends React.Component {
                   id='password'
                   value={this.state.registerPassword}
                   onChange={this.onPasswordChange}
+                  placeholder="Enter your Password"
                 />
                 <span style={{ color: 'red' }}>{passwordError}</span>
                 <span style={{ color: 'red' }}>{weekPasswordError}</span>
@@ -139,6 +142,7 @@ class Register extends React.Component {
                   id='confirmPassword'
                   value={this.state.registerCpassword}
                   onChange={this.onCPasswordChange}
+                  placeholder="Confirm your Password"
                 />
                 <span style={{ color: 'red' }}>{confirmPasswordError}</span>
               </div>
